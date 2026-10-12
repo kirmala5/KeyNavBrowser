@@ -1,0 +1,151 @@
+<Window x:Class="KeyNavBrowser.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Настройки"
+        Height="520" Width="560"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        Background="{DynamicResource WindowBgBrush}"
+        Foreground="{DynamicResource TextPrimaryBrush}"
+        UseLayoutRounding="True">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <TextBlock Text="Общие" FontWeight="Bold" FontSize="14"
+                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,8" />
+
+                <TextBlock Text="Домашняя страница" Margin="0,0,0,4"
+                           Foreground="{DynamicResource TextSecondaryBrush}" />
+                <TextBox x:Name="HomePageBox" Padding="8,6"
+                         Background="{DynamicResource InputBgBrush}"
+                         Foreground="{DynamicResource TextPrimaryBrush}"
+                         BorderBrush="{DynamicResource BorderBrush}"
+                         BorderThickness="1" />
+
+                <Grid Margin="0,12,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                        <TextBlock Text="Поисковая система" Margin="0,0,0,4"
+                                   Foreground="{DynamicResource TextSecondaryBrush}" />
+                        <ComboBox x:Name="SearchEngineBox" Padding="6,5"
+                                  Background="{DynamicResource InputBgBrush}"
+                                  Foreground="{DynamicResource TextPrimaryBrush}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="Тема оформления" Margin="0,0,0,4"
+                                   Foreground="{DynamicResource TextSecondaryBrush}" />
+                        <ComboBox x:Name="ThemeBox" Width="140" Padding="6,5"
+                                  Background="{DynamicResource InputBgBrush}"
+                                  Foreground="{DynamicResource TextPrimaryBrush}"
+                                  SelectionChanged="OnThemeChanged" />
+                    </StackPanel>
+                </Grid>
+
+                <Separator Margin="0,16,0,12" Background="{DynamicResource BorderBrush}" />
+
+                <TextBlock Text="Клавиатурная навигация" FontWeight="Bold" FontSize="14"
+                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,8" />
+
+                <CheckBox x:Name="KeyboardNavCheck"
+                          Content="Включить навигацию с клавиатуры (W/A/S/D, Q/E, ПРОБЕЛ)"
+                          Margin="0,0,0,6"
+                          Checked="OnKeyboardNavChanged"
+                          Unchecked="OnKeyboardNavChanged" />
+
+                <TextBlock Margin="0,8,0,4" Foreground="{DynamicResource TextSecondaryBrush}">
+                    <Run Text="Шаг прокрутки W/S/A/D:" />
+                    <Run x:Name="ScrollStepValue" FontWeight="Bold" />
+                </TextBlock>
+
+                <Slider x:Name="ScrollStepSlider"
+                        Minimum="50" Maximum="100"
+                        TickFrequency="5"
+                        TickPlacement="BottomRight"
+                        IsSnapToTickEnabled="True"
+                        ValueChanged="OnScrollStepChanged" />
+
+                <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                    <TextBlock Text="50" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
+                    <TextBlock Text="100" FontSize="11" Margin="250,0,0,0"
+                               Foreground="{DynamicResource TextSecondaryBrush}" />
+                </StackPanel>
+
+                <Border Margin="0,12,0,0" Padding="10"
+                        CornerRadius="6"
+                        Background="{DynamicResource SurfaceAltBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}"
+                        BorderThickness="1">
+                    <TextBlock FontSize="11.5"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               TextWrapping="Wrap"
+                               Text="W / S / A / D — прокрутка · ПРОБЕЛ — экран вниз · Q / E — предыдущая и следующая ссылка · 1 – 9 — переход по ссылке с соответствующим номером · ENTER — открыть ссылку · ESC — снять выделение. Клавиши не перехватываются, когда фокус в поле ввода." />
+                </Border>
+
+                <CheckBox x:Name="LinkNumbersCheck"
+                          Content="Показывать номер поверх каждой видимой ссылки"
+                          Margin="0,12,0,0"
+                          Checked="OnLinkNumbersChanged"
+                          Unchecked="OnLinkNumbersChanged" />
+
+                <Separator Margin="0,16,0,12" Background="{DynamicResource BorderBrush}" />
+
+                <TextBlock Text="Отображение контента" FontWeight="Bold" FontSize="14"
+                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,8" />
+
+                <TextBlock Margin="0,0,0,4" Foreground="{DynamicResource TextSecondaryBrush}"
+                           Text="Режим отображения страницы:" />
+
+                <ComboBox x:Name="ContentModeBox"
+                          DisplayMemberPath="Display"
+                          SelectionChanged="OnContentModePreview" />
+
+                <TextBlock x:Name="ContentModeHint"
+                           Margin="0,6,0,0"
+                           FontSize="11.5"
+                           TextWrapping="Wrap"
+                           Foreground="{DynamicResource TextSecondaryBrush}" />
+
+                <TextBlock FontSize="11.5"
+                           Margin="0,8,0,0"
+                           TextWrapping="Wrap"
+                           Foreground="{DynamicResource TextSecondaryBrush}"
+                           Text="Режим применяется сразу при выборе и действует на текущую страницу. Фоновые изображения (background-image) не скрываются — в ТЗ перечислены только конкретные элементы." />
+
+                <Separator Margin="0,16,0,12" Background="{DynamicResource BorderBrush}" />
+
+                <TextBlock Text="Вкладки" FontWeight="Bold" FontSize="14"
+                           Foreground="{DynamicResource AccentBrush}" Margin="0,0,0,8" />
+
+                <CheckBox x:Name="TargetBlankCheck"
+                          Content="Открывать ссылки с target=&quot;_blank&quot; и вызовы window.open в новой вкладке (по умолчанию — в текущем окне)"
+                          Checked="OnTargetBlankChanged"
+                          Unchecked="OnTargetBlankChanged" />
+
+                <TextBlock Text="Горячие клавиши: Ctrl+T (новая вкладка) · Ctrl+W (закрыть) · Ctrl+L (адрес) · Ctrl+B (закладка) · Ctrl+H (история) · Ctrl+O (закладки) · F5 / Ctrl+R (обновить) · Ctrl+Tab (следующая вкладка) · Alt+← / Alt+→ (назад/вперёд) · F11 (полный экран)"
+                           FontSize="11.5"
+                           Margin="0,10,0,0"
+                           TextWrapping="Wrap"
+                           Foreground="{DynamicResource TextSecondaryBrush}" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+            <Button Padding="14,6" Margin="0,0,8,0" Content="По умолчанию" Click="OnResetClick" />
+            <Button Padding="16,6" Margin="0,0,8,0" Content="Сохранить" IsDefault="True" Click="OnSaveClick" />
+            <Button Padding="16,6" Content="Отмена" IsCancel="True" Click="OnCancelClick" />
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Проверка клавиатурной навигации</title>
+  <style>
+    body { font: 15px/1.6 "Segoe UI", system-ui, sans-serif; margin: 0; padding: 20px 40px 4000px; }
+    h1 { color: #0f6cbd; }
+    h2 { margin-top: 28px; }
+    a { color: #0b5fa5; }
+    input, textarea, select { font: 15px "Segoe UI", sans-serif; padding: 6px; width: 330px; }
+    .wide { width: 3000px; background: #eef5fb; padding: 12px; border: 1px solid #bcd; }
+    .box { margin: 14px 0; padding: 10px; border-left: 4px solid #888; background: #fafafa; }
+  </style>
+</head>
+<body>
+
+<h1>Проверка клавиатурной навигации (п. 4 ТЗ)</h1>
+
+<p class="box">
+  Поля ввода — проверка совместимости (п. 4.3):
+  <input id="text" type="text" placeholder="Введите текст: w a s d q e">
+  <br><br>
+  <textarea id="area" rows="2" placeholder="Многострочное поле"></textarea>
+  <br>
+  <select id="sel"><option>Вариант 1</option><option>Вариант 2</option></select>
+  <br><br>
+  <div id="ce" contenteditable="true"
+       style="border:1px dashed #999;padding:6px;width:330px">contenteditable — редактируемый блок</div>
+</p>
+
+<h2>Ссылки в порядке DOM</h2>
+<ol>
+  <li><a href="keynav-target.html" id="l01">Ссылка 01 → keynav-target.html</a></li>
+  <li><a href="#l02" id="l02">Ссылка 02 (якорь)</a></li>
+  <li><a href="#l03" id="l03">Ссылка 03 (якорь)</a></li>
+  <li><a href="#l04" id="l04">Ссылка 04 (якорь)</a></li>
+  <li><a href="#l05" id="l05">Ссылка 05 (якорь)</a></li>
+  <li><a href="#l06" id="l06">Ссылка 06 (якорь)</a></li>
+  <li><a href="#l07" id="l07">Ссылка 07 (якорь)</a></li>
+  <li><a href="#l08" id="l08">Ссылка 08 (якорь)</a></li>
+  <li><a href="#l09" id="l09">Ссылка 09 (якорь)</a></li>
+  <li><a href="https://example.com/target-blank" target="_blank" id="l10">Ссылка 10 (target=_blank)</a></li>
+  <li><a href="#l11" id="l11">Ссылка 11 (якорь)</a></li>
+  <li><a href="#l12" id="l12">Ссылка 12 (якорь)</a></li>
+  <li><a href="#l13" id="l13">Ссылка 13 (якорь)</a></li>
+  <li><a href="#l14" id="l14">Ссылка 14 (якорь)</a></li>
+  <li><a href="#l15" id="l15">Ссылка 15 (якорь)</a></li>
+</ol>
+
+<h2>Горизонтальная прокрутка (A / D)</h2>
+<div class="wide">
+  Блок шириной 3000&nbsp;пикселей.
+  <span style="float:right">ПРАВЫЙ КРАЙ →</span>
+</div>
+
+<h2>Медиа — проверка трёх режимов отображения</h2>
+<p class="box">
+  Переключайте режим в списке справа от адресной строки:
+  <b>«Только текст»</b> — скрыты всё (изображение, svg, canvas, видео, iframe);
+  <b>«Текст + изображения»</b> — скрыты только видео и iframe;
+  <b>«Текст + видео»</b> — скрыты изображения и svg, видео остаётся.
+</p>
+<p>
+  <b>Изображение:</b>
+  <img id="m-img" width="90" height="60" alt="изображение"
+       src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='60'%3E%3Crect width='90' height='60' fill='%23c0392b'/%3E%3Ctext x='45' y='34' font-size='16' fill='%23fff' text-anchor='middle'%3Eimg%3C/text%3E%3C/svg%3E">
+  &nbsp;<b>svg:</b>
+  <svg id="m-svg" width="60" height="60"><rect width="60" height="60" fill="#2c3e50"/><text x="30" y="34" font-size="14" fill="#fff" text-anchor="middle">svg</text></svg>
+  &nbsp;<b>canvas:</b>
+  <canvas id="m-canvas" width="60" height="60"></canvas>
+  &nbsp;<b>видео:</b>
+  <video id="m-video" width="90" height="60" controls muted playsinline></video>
+  &nbsp;<b>iframe:</b>
+  <iframe id="m-iframe" width="90" height="60" srcdoc="<p style='font:12px sans-serif'>iframe</p>"></iframe>
+</p>
+<script>
+  (function () {
+    var c = document.getElementById('m-canvas');
+    if (c && c.getContext) {
+      var g = c.getContext('2d');
+      g.fillStyle = '#16a085'; g.fillRect(0, 0, 60, 60);
+      g.fillStyle = '#fff'; g.font = '14px sans-serif';
+      g.textAlign = 'center'; g.fillText('canvas', 30, 34);
+    }
+  })();
+</script>
+
+<h2>Открытие ссылок в текущем окне</h2>
+<p class="box">
+  По умолчанию все эти переходы открываются <b>в текущей вкладке</b>
+  (никаких отдельных окон Chromium):
+</p>
+<ul>
+  <li><a href="#wopen" id="w1">window.open() — новое окно из скрипта</a></li>
+  <li><a href="keynav-target.html" target="_blank" id="w2">target="_blank" на второй ссылке выше</a></li>
+  <li>
+    Форма с <code>target="_blank"</code>:
+    <form id="wform" action="keynav-target.html" target="_blank" style="display:inline">
+      <button type="submit">Отправить форму</button>
+    </form>
+  </li>
+  <li>
+    <button type="button" onclick="window.open('keynav-target.html', '_blank')">
+      Вызов window.open(..., '_blank')
+    </button>
+  </li>
+</ul>
+<p>
+  <a href="#nevidimo" id="hidden1" style="display:none">скрытая ссылка — без номера</a>
+  <a href="#nevidimo2" id="hidden2" aria-hidden="true">aria-hidden — тоже без номера</a>
+</p>
+
+<h2 style="margin-top:1500px">Вертикальная прокрутка</h2>
+<p><a href="#tail" id="tail">Ссылка «tail» — внизу страницы</a></p>
+<p style="height:1000px"></p>
+<p><a href="#last" id="last">Ссылка «last» — последняя (проверка цикла E)</a></p>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+# Сборка
+bin/
+obj/
+
+# Готовая самодостаточная сборка: не коммитится (133 МБ),
+# публикуйте её через GitHub Releases.
+publish/
+
+## Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+
+## Временные файлы
+*.tmp
+
+# Настройки приложения (%APPDATA%\KeyNavBrowser не в репозитории)
+*.db
